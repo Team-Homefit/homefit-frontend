@@ -104,6 +104,7 @@ onBeforeMount(async () => {
   try {
     await memberStore.getMember();
     article.value = await getArticleDetailApi(articleId);
+    console.log('article', article.value);
   } catch (error) {
     console.error('게시글 상세 조회 실패:', error);
   }
@@ -111,7 +112,7 @@ onBeforeMount(async () => {
 
 // 관심지역인지 여부
 const isInterestedRegion = computed(() => {
-  return interestedRegionStore.regions.find(region => region.boardId === article.value.boardId);
+  return article.value.isInterestedRegion;
 });
 
 // 좋아요 여부
