@@ -133,7 +133,7 @@ const navigateToPasswordUpdate = () => {
 };
 
 const navigateToFavorites = () => {
-  router.push({ name: 'articleLike' });
+  router.push({ name: 'articleLiked' });
 };
 
 const navigateToInterestAreas = () => {
