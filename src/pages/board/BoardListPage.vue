@@ -18,7 +18,6 @@
         />
         
         <!-- 게시판 목록 -->
-         <!-- TODO: 게시글에 조회수 달기 -->
         <div class="board-list" v-if="articles.length > 0">
           <BoardItem
             v-for="(board, index) in articles" 
