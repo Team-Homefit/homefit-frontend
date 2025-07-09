@@ -21,7 +21,7 @@
       
       <!-- 댓글 섹션 -->
       <CommentSection 
-        :comments="article.comments" 
+        :comments="processedComments" 
         :is-interested-region="isInterestedRegion"
         :current-user-id="Number(member?.id)"
         :current-member-role="member?.role"
@@ -119,6 +119,18 @@ const isInterestedRegion = computed(() => {
 // 좋아요 여부
 const isLiked = computed(() => {
   return article.value.isLiked;
+});
+
+// 관심지역이 아닌 경우 더미 댓글 데이터 생성
+const processedComments = computed(() => {
+  if (isInterestedRegion.value) {
+    return article.value.comments || [];
+  }
+  
+  return article.value.comments.map(() => ({
+    commentContent: '관심지역 설정 후 댓글을 확인할 수 있습니다.',
+    nickname: '익명의 사자',
+  }));
 });
 
 // 게시글 데이터 다시 로드
