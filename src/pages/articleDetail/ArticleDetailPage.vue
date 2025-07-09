@@ -31,6 +31,7 @@
         @delete-reply="handleDeleteReply"
         @report-comment="openReportCommentModal"
         @add-region="handleAddRegion"
+        @remove-region="handleRemoveRegion"
       />
 
       <ConfirmModal
@@ -268,10 +269,14 @@ const handleCloseNotiModal = () => {
   isFailNoti.value = false;
 }
 
-const handleAddRegion = () => {
+const handleAddRegion = async () => {
   console.log('관심지역 추가');
-  // 실제로는 관심지역 설정 모달 표시 또는 API 호출
-  interestedRegionStore.regions.push(article.value.region);
+  await reloadArticle();
+};
+
+const handleRemoveRegion = async () => {
+  console.log('관심지역 제거');
+  await reloadArticle();
 };
 </script>
 

@@ -30,6 +30,7 @@ import { useInterestedRegionStore } from "@/features/interestedRegion/interested
 import { addInterestedRegionApi } from '@/entities/interestedRegion/addInterestedRegionApi';
 import { deleteInterestedRegionApi } from '@/entities/interestedRegion/deleteInterestedRegionApi';
 
+const emit = defineEmits(['add-region', 'remove-region']);
 const interestedRegionStore = useInterestedRegionStore();
 const showModal = ref(false);
 const selectedRegions = ref([]);
@@ -45,6 +46,7 @@ const addRegion = async (sggCode) => {
     await addInterestedRegionApi(sggCode);
     await interestedRegionStore.fetchInterestRegions();
     selectedRegions.value = interestedRegionStore.regions;
+    emit('add-region');
   }
 };
 
@@ -56,6 +58,7 @@ const removeRegion = async (sggCode) => {
   await deleteInterestedRegionApi(sggCode);
   await interestedRegionStore.fetchInterestRegions();
   selectedRegions.value = interestedRegionStore.regions;
+  emit('remove-region');
 };
 </script>
 
