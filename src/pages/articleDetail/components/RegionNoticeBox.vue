@@ -17,33 +17,48 @@
       v-if="showModal"
       :selected-regions="selectedRegions"
       @close="showModal = false"
-      @add-region="handleAddRegion"
-      @remove-region="handleRemoveRegion"
+      @add-region="addRegion"
+      @remove-region="removeRegion"
     />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onBeforeMount } from 'vue';
 import RegionSelectModal from '@/pages/board/components/RegionSelectModal.vue';
+import { useInterestedRegionStore } from "@/features/interestedRegion/interestedRegionStore";
+import { addInterestedRegionApi } from '@/entities/interestedRegion/addInterestedRegionApi';
+import { deleteInterestedRegionApi } from '@/entities/interestedRegion/deleteInterestedRegionApi';
 
+const emit = defineEmits(['add-region', 'remove-region']);
+const interestedRegionStore = useInterestedRegionStore();
 const showModal = ref(false);
 const selectedRegions = ref([]);
 
+onBeforeMount(async () => {
+  await interestedRegionStore.fetchInterestRegions();
+  selectedRegions.value = interestedRegionStore.regions;
+});
+
 // 지역 추가 핸들러
-const handleAddRegion = (region) => {
-  selectedRegions.value.push(region);
-  // TODO: API 호출하여 관심지역 추가
-  console.log('관심지역 추가:', region);
+const addRegion = async (sggCode) => {
+  if (!selectedRegions.value.some(r => r.code === sggCode)) {
+    await addInterestedRegionApi(sggCode);
+    await interestedRegionStore.fetchInterestRegions();
+    selectedRegions.value = interestedRegionStore.regions;
+    emit('add-region');
+  }
 };
 
 // 지역 제거 핸들러
-const handleRemoveRegion = (regionCode) => {
+const removeRegion = async (sggCode) => {
   selectedRegions.value = selectedRegions.value.filter(
-    region => region.code !== regionCode
+    region => region.code !== sggCode
   );
-  // TODO: API 호출하여 관심지역 제거
-  console.log('관심지역 제거:', regionCode);
+  await deleteInterestedRegionApi(sggCode);
+  await interestedRegionStore.fetchInterestRegions();
+  selectedRegions.value = interestedRegionStore.regions;
+  emit('remove-region');
 };
 </script>
 

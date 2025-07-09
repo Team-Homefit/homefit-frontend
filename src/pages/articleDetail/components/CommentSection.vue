@@ -6,6 +6,7 @@
     <RegionNoticeBox 
       v-if="!isInterestedRegion" 
       @add-region="$emit('add-region')" 
+      @remove-region="$emit('remove-region')" 
     />
     
     <!-- 댓글 작성 폼 -->
@@ -72,7 +73,8 @@ const emit = defineEmits([
   'add-reply', 
   'delete-comment', 
   'report-comment', 
-  'add-region'
+  'add-region',
+  'remove-region'
 ]);
 
 const handleCommentSubmit = (content) => {

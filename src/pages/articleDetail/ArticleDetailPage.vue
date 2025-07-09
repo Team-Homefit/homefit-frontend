@@ -21,7 +21,7 @@
       
       <!-- 댓글 섹션 -->
       <CommentSection 
-        :comments="article.comments" 
+        :comments="processedComments" 
         :is-interested-region="isInterestedRegion"
         :current-user-id="Number(member?.id)"
         :current-member-role="member?.role"
@@ -31,6 +31,7 @@
         @delete-reply="handleDeleteReply"
         @report-comment="openReportCommentModal"
         @add-region="handleAddRegion"
+        @remove-region="handleRemoveRegion"
       />
 
       <ConfirmModal
@@ -104,6 +105,7 @@ onBeforeMount(async () => {
   try {
     await memberStore.getMember();
     article.value = await getArticleDetailApi(articleId);
+    console.log('article', article.value);
   } catch (error) {
     console.error('게시글 상세 조회 실패:', error);
   }
@@ -111,12 +113,24 @@ onBeforeMount(async () => {
 
 // 관심지역인지 여부
 const isInterestedRegion = computed(() => {
-  return interestedRegionStore.regions.find(region => region.boardId === article.value.boardId);
+  return article.value.isInterestedRegion;
 });
 
 // 좋아요 여부
 const isLiked = computed(() => {
   return article.value.isLiked;
+});
+
+// 관심지역이 아닌 경우 더미 댓글 데이터 생성
+const processedComments = computed(() => {
+  if (isInterestedRegion.value) {
+    return article.value.comments || [];
+  }
+  
+  return article.value.comments.map(() => ({
+    commentContent: '관심지역 설정 후 댓글을 확인할 수 있습니다.',
+    nickname: '익명의 사자',
+  }));
 });
 
 // 게시글 데이터 다시 로드
@@ -267,10 +281,14 @@ const handleCloseNotiModal = () => {
   isFailNoti.value = false;
 }
 
-const handleAddRegion = () => {
+const handleAddRegion = async () => {
   console.log('관심지역 추가');
-  // 실제로는 관심지역 설정 모달 표시 또는 API 호출
-  interestedRegionStore.regions.push(article.value.region);
+  await reloadArticle();
+};
+
+const handleRemoveRegion = async () => {
+  console.log('관심지역 제거');
+  await reloadArticle();
 };
 </script>
 

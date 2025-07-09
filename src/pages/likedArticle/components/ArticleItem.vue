@@ -5,7 +5,7 @@
 
     <div class="article-meta">
       <div class="meta-left">
-        <span class="author">{{ article.author.nickname }}</span>
+        <span class="author">{{ article.nickname }}</span>
         <span class="separator">·</span>
         <span class="date">{{ formatDate(article.createdAt) }}</span>
       </div>
@@ -72,25 +72,6 @@
           <span>{{ article.commentCount }}</span>
         </div>
       </div>
-    </div>
-
-    <div class="article-actions">
-      <div class="liked-info">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          class="liked-icon"
-        >
-          <path
-            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-          />
-        </svg>
-        <span>{{ formatDate(article.likedAt) }}에 좋아요</span>
-      </div>
-      <button @click.stop="$emit('unlike-article', article.id)" class="unlike-button">좋아요 취소</button>
     </div>
   </div>
 </template>
